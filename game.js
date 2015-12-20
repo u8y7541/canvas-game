@@ -23,7 +23,7 @@ walls.push([200, 150, 100, 100])
 walls.push([350, 150, 100, 100])
 
 playerImg = new Image()
-playerImg.src = 'images/player.bmp'
+playerImg.src = 'images/player.png'
 
 var player = {
 	xvel: 0,
