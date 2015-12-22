@@ -2,6 +2,21 @@ var canvas = document.createElement('canvas')
 var ctx = canvas.getContext('2d')
 canvas.width = 960
 canvas.height = 640
+var attrib = document.createAttribute('style')
+attrib.value = ' \
+-webkit-transform-origin: 0 0; \
+-webkit-transform: scale(0.8); \
+\
+-moz-transform-origin: 0 0; \
+-moz-transform: scale(0.8); \
+\
+-o-transform-origin: 0 0; \
+-o-transform: scale(0.8); \
+\
+transform-origin: 0 0; \
+transform: scale(0.8); \
+'
+canvas.setAttributeNode(attrib)
 document.body.appendChild(canvas)
 
 var collideBottom = false
@@ -36,7 +51,6 @@ walls.forEach(function (i) {
 	for (var j = i[1]; j < i[1] + i[3]; j = j + 10) {
 		for (var k = i[0]; k < i[0] + i[2]; k = k + 10) {
 			if ((j - i[1]) <= 20) {
-				console.log(j)
 				color = Math.floor((Math.random() * 255) + 1)
 				colors.push('rgb(0, ' + color + ', 0)')
 			}
