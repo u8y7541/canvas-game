@@ -68,13 +68,13 @@ var player = {
 	x: 10,
 	y: 350,
 	rect: new Rect(this.x, this.y, 35, 35),
-	topRect: new Rect(this.x, this.y - 5, 35, 5),
+	topRect: new Rect(this.x + 5, this.y - 8, 30, 5),
 	bottomRect: new Rect(this.x, this.y + 35, 35, 5),
 	wallRight: new Rect(this.x + 32, this.y, 5, 35),
 	wallLeft: new Rect(this.x - 2, this.y, 5, 35),
 	updateRect: function () {
 		this.rect = new Rect(this.x, this.y, 35, 35)
-		this.topRect = new Rect(this.x, this.y - 8, 35, 5)
+		this.topRect = new Rect(this.x + 3, this.y - 8, 29, 5)
 		this.bottomRect = new Rect(this.x, this.y + 38, 35, 5)
 		this.wallRight = new Rect(this.x + 32, this.y, 5, 35)
 		this.wallLeft = new Rect(this.x - 2, this.y, 5, 35)
@@ -174,7 +174,8 @@ mainLoop = function () {
 
 	ctx.drawImage(playerImg, player.x, player.y)
 
-	/*rects = [player.bottomRect, player.topRect, player.wallRight, player.wallLeft]
+	/*ctx.fillStyle = 'rgb(0, 0, 0)'
+	rects = [player.bottomRect, player.topRect, player.wallRight, player.wallLeft]
 	rects.forEach(function(i) {
 		ctx.fillRect(i.x, i.y, i.width, i.height)
 	})*/
