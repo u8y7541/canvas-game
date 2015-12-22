@@ -17,13 +17,36 @@ addEventListener("keyup", function (key) {
 }, false);
 
 var walls = []
-walls.push([0, 400, 960, 140])
+walls.push([0, 400, 960, 240])
 walls.push([0, 200, 100, 100])
 walls.push([200, 150, 100, 100])
 walls.push([350, 150, 100, 100])
+walls.push([600, 130, 200, 100])
 
 playerImg = new Image()
 playerImg.src = 'images/player.png'
+
+cloud = new Image()
+cloud.src = 'images/Cloud_01.png'
+
+cloud_positions = [[50, 100], [600, 200], [300, 300], [800, 50]]
+
+var colors = []
+walls.forEach(function (i) {
+	for (var j = i[1]; j < i[1] + i[3]; j = j + 10) {
+		for (var k = i[0]; k < i[0] + i[2]; k = k + 10) {
+			if ((j - i[1]) <= 20) {
+				console.log(j)
+				color = Math.floor((Math.random() * 255) + 1)
+				colors.push('rgb(0, ' + color + ', 0)')
+			}
+			else {
+				color = Math.floor((Math.random() * 153) + 27)
+				colors.push('rgb(' + color + ', 0, 0)')
+			}
+		}
+	}
+})
 
 var player = {
 	xvel: 0,
@@ -31,16 +54,16 @@ var player = {
 	x: 10,
 	y: 350,
 	rect: new Rect(this.x, this.y, 35, 35),
-	topRect: new Rect(this.x, this.y - 5, 5, 35),
-	bottomRect: new Rect(this.x, this.y + 5, 5, 35),
-	wallRight: new Rect(this.x + 2, this.y, 35, 5),
-	wallLeft: new Rect(this.x - 2, this.y, 35, 5),
+	topRect: new Rect(this.x, this.y - 5, 35, 5),
+	bottomRect: new Rect(this.x, this.y + 35, 35, 5),
+	wallRight: new Rect(this.x + 32, this.y, 5, 35),
+	wallLeft: new Rect(this.x - 2, this.y, 5, 35),
 	updateRect: function () {
 		this.rect = new Rect(this.x, this.y, 35, 35)
-		this.topRect = new Rect(this.x, this.y - 5, 5, 35)
-		this.bottomRect = new Rect(this.x, this.y + 5, 5, 35)
-		this.wallRight = new Rect(this.x + 2, this.y, 35, 5)
-		this.wallLeft = new Rect(this.x - 2, this.y, 35, 5)
+		this.topRect = new Rect(this.x, this.y - 8, 35, 5)
+		this.bottomRect = new Rect(this.x, this.y + 38, 35, 5)
+		this.wallRight = new Rect(this.x + 32, this.y, 5, 35)
+		this.wallLeft = new Rect(this.x - 2, this.y, 5, 35)
 	},
 	updateX: function () {
 		if (this.x <= 0 || this.x >= canvas.width) {
@@ -81,6 +104,7 @@ var player = {
 		})
 		if (collideTop) {
 			this.yvel *= -1
+			this.y += 5
 		}
 	}
 }
@@ -123,12 +147,33 @@ mainLoop = function () {
 	player.updateY()
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
-	ctx.fillStyle = 'rgb(0, 0, 0)'
+	ctx.fillStyle = 'rgb(204, 204, 255)'
+	ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-	walls.forEach(function(i) {
-		ctx.fillRect(i[0], i[1], i[2], i[3])
+	cloud_positions.forEach(function (i) {
+		ctx.drawImage(cloud, i[0], i[1])
+		i[0] += 1
+		if (i[0] > canvas.width) {
+			i[0] = -180
+		}
 	})
+
 	ctx.drawImage(playerImg, player.x, player.y)
+
+	/*rects = [player.bottomRect, player.topRect, player.wallRight, player.wallLeft]
+	rects.forEach(function(i) {
+		ctx.fillRect(i.x, i.y, i.width, i.height)
+	})*/
+
+	var count = 0
+	walls.forEach(function (i) {
+		for (var j = i[1]; j < i[1] + i[3]; j = j + 10) {
+			for (var k = i[0]; k < i[0] + i[2]; k = k + 10, count++) {
+				ctx.fillStyle = colors[count]
+				ctx.fillRect(k, j, 10, 10)
+			}
+		}
+	})
 }
 
 window.onload = function () {
