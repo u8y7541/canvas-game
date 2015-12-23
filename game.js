@@ -61,6 +61,19 @@ walls.forEach(function (i) {
 		}
 	}
 })
+precanvas = document.createElement('canvas')
+precanvas.width = canvas.width
+precanvas.height = canvas.height
+prectx = precanvas.getContext('2d')
+var count = 0
+walls.forEach(function (i) {
+	for (var j = i[1]; j < i[1] + i[3]; j = j + 10) {
+		for (var k = i[0]; k < i[0] + i[2]; k = k + 10, count++) {
+			prectx.fillStyle = colors[count]
+			prectx.fillRect(k, j, 10, 10)
+		}
+	}
+})
 
 var player = {
 	xvel: 0,
@@ -179,16 +192,7 @@ mainLoop = function () {
 	rects.forEach(function(i) {
 		ctx.fillRect(i.x, i.y, i.width, i.height)
 	})*/
-
-	var count = 0
-	walls.forEach(function (i) {
-		for (var j = i[1]; j < i[1] + i[3]; j = j + 10) {
-			for (var k = i[0]; k < i[0] + i[2]; k = k + 10, count++) {
-				ctx.fillStyle = colors[count]
-				ctx.fillRect(k, j, 10, 10)
-			}
-		}
-	})
+	ctx.drawImage(precanvas, 0, 0)
 }
 
 window.onload = function () {
