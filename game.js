@@ -50,7 +50,7 @@ var colors = []
 walls.forEach(function (i) {
 	for (var j = i[1]; j < i[1] + i[3]; j = j + 10) {
 		for (var k = i[0]; k < i[0] + i[2]; k = k + 10) {
-			if ((j - i[1]) <= 20) {
+			if ((j - i[1]) <= 30) {
 				color = Math.floor((Math.random() * 255) + 1)
 				colors.push('rgb(0, ' + color + ', 0)')
 			}
