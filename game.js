@@ -89,8 +89,8 @@ var player = {
 		this.rect = new Rect(this.x, this.y, 35, 35)
 		this.topRect = new Rect(this.x + 2.5, this.y, 30, 5)
 		this.bottomRect = new Rect(this.x + 2.5, this.y + 30, 30, 5)
-		this.wallRight = new Rect(this.x + 32, this.y + 2.5, 5, 30)
-		this.wallLeft = new Rect(this.x - 2, this.y + 2.5, 5, 30)
+		this.wallRight = new Rect(this.x + 32, this.y - 2.5, 5, 30)
+		this.wallLeft = new Rect(this.x - 2, this.y - 2.5, 5, 30)
 	},
 	updateX: function () {
 		if (this.x <= 0 || this.x >= canvas.width) {
@@ -132,6 +132,29 @@ var player = {
 		if (collideTop) {
 			this.yvel *= -1
 			this.y += 5
+		}
+		walls.forEach(function (i) {
+			if (player.bottomRect.collidesWith(new Rect(i[0], i[1], i[2], i[3]))) {
+				collideBottom = true
+			}
+		})
+		if (collideBottom) {
+			player.y -= 0.5
+			walls.forEach(function (i) {
+				if (player.bottomRect.collidesWith(new Rect(i[0], i[1], i[2], i[3]))) {
+					collideBottom = true
+				}
+			})
+			if (!collideBottom) {
+				while (!collideBottom) {
+					y += 0.1
+					walls.forEach(function (i) {
+						if (player.bottomRect.collidesWith(new Rect(i[0], i[1], i[2], i[3]))) {
+							collideBottom = true
+						}
+					})
+				}
+			}
 		}
 	}
 }
