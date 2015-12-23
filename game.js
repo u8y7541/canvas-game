@@ -31,12 +31,23 @@ addEventListener("keyup", function (key) {
 	delete keys[key.keyCode];
 }, false);
 
-var walls = []
-walls.push([0, 400, 960, 240])
-walls.push([0, 200, 100, 100])
-walls.push([200, 150, 100, 100])
-walls.push([350, 150, 100, 100])
-walls.push([600, 130, 200, 100])
+gameJSON = `{
+	"Level1": {
+		"walls": [
+			[0, 400, 960, 240],
+			[0, 200, 100, 100],
+			[200, 150, 100, 100],
+			[350, 150, 100, 100],
+			[600, 130, 200, 100]
+		],
+		"startPoint": {
+			"x": 10,
+			"y": 350
+		}
+	}
+}`
+gameJSON = JSON.parse(gameJSON)
+var walls = gameJSON["Level1"]["walls"]
 
 playerImg = new Image()
 playerImg.src = 'images/player.png'
@@ -78,8 +89,8 @@ walls.forEach(function (i) {
 var player = {
 	xvel: 0,
 	yvel: 0,
-	x: 10,
-	y: 350,
+	x: 0,
+	y: 0,
 	rect: new Rect(this.x, this.y, 35, 35),
 	topRect: new Rect(this.x + 5, this.y - 8, 30, 5),
 	bottomRect: new Rect(this.x + 2.5, this.y + 35, 30, 5),
@@ -158,6 +169,9 @@ var player = {
 		}
 	}
 }
+player.x = gameJSON["Level1"]["startPoint"]["x"]
+player.y = gameJSON["Level1"]["startPoint"]["y"]
+
 
 function Rect(x, y, width, height) {
 	this.x = x;
@@ -215,6 +229,7 @@ mainLoop = function () {
 	rects.forEach(function(i) {
 		ctx.fillRect(i.x, i.y, i.width, i.height)
 	})*/
+
 	ctx.drawImage(precanvas, 0, 0)
 }
 
