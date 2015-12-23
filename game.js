@@ -69,15 +69,15 @@ var player = {
 	y: 350,
 	rect: new Rect(this.x, this.y, 35, 35),
 	topRect: new Rect(this.x + 5, this.y - 8, 30, 5),
-	bottomRect: new Rect(this.x, this.y + 35, 35, 5),
+	bottomRect: new Rect(this.x + 2.5, this.y + 35, 30, 5),
 	wallRight: new Rect(this.x + 32, this.y, 5, 35),
 	wallLeft: new Rect(this.x - 2, this.y, 5, 35),
 	updateRect: function () {
 		this.rect = new Rect(this.x, this.y, 35, 35)
-		this.topRect = new Rect(this.x + 3, this.y - 8, 29, 5)
-		this.bottomRect = new Rect(this.x, this.y + 38, 35, 5)
-		this.wallRight = new Rect(this.x + 32, this.y, 5, 35)
-		this.wallLeft = new Rect(this.x - 2, this.y, 5, 35)
+		this.topRect = new Rect(this.x + 2.5, this.y, 30, 5)
+		this.bottomRect = new Rect(this.x + 2.5, this.y + 30, 30, 5)
+		this.wallRight = new Rect(this.x + 32, this.y + 2.5, 5, 30)
+		this.wallLeft = new Rect(this.x - 2, this.y + 2.5, 5, 30)
 	},
 	updateX: function () {
 		if (this.x <= 0 || this.x >= canvas.width) {
