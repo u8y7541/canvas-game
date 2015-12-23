@@ -55,7 +55,7 @@ walls.forEach(function (i) {
 				colors.push('rgb(0, ' + color + ', 0)')
 			}
 			else {
-				color = Math.floor((Math.random() * 153) + 27)
+				color = Math.floor((Math.random() * 153) + 50)
 				colors.push('rgb(' + color + ', 0, 0)')
 			}
 		}
