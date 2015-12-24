@@ -1,3 +1,11 @@
+var music = new Audio('tetrismenu.mp3')
+music.loop = true
+music.addEventListener('ended', function() {
+    this.currentTime = 0;
+    this.play();
+}, false);
+music.play()
+
 var canvas = document.createElement('canvas')
 var ctx = canvas.getContext('2d')
 canvas.width = 960
