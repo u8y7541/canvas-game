@@ -1,3 +1,4 @@
+// Play music
 var music = new Audio('tetrismenu.mp3')
 music.loop = true
 music.addEventListener('ended', function() {
@@ -6,6 +7,7 @@ music.addEventListener('ended', function() {
 }, false);
 music.play()
 
+// Create canvas, align it
 var canvas = document.createElement('canvas')
 var ctx = canvas.getContext('2d')
 canvas.width = 960
@@ -27,18 +29,7 @@ transform: scale(0.8); \
 canvas.setAttributeNode(attrib)
 document.body.appendChild(canvas)
 
-var collideBottom = false
-
-var keys = {}
-
-addEventListener("keydown", function (key) {
-	keys[key.keyCode] = true;
-}, false);
-
-addEventListener("keyup", function (key) {
-	delete keys[key.keyCode];
-}, false);
-
+// All the game level data fitted into a JSON for easy editing.
 gameJSON = `{
 	"Level1": {
 		"walls": [
@@ -62,61 +53,101 @@ gameJSON = `{
 			"x": 750,
 			"y": 80
 		}
+	},
+	"Level2": {
+		"walls": [
+			[0, 400, 960, 240],
+			[480, 350, 100, 90]
+		],
+		"startPoint": {
+			"x": 50,
+			"y": 200
+		},
+		"cloudPositions": [
+			[200, 200]
+		],
+		"end": {
+			"x": 910,
+			"y": 350
+		}
 	}
 }`
+
+// All the initializing.
+gameLvl = 1
 gameJSON = JSON.parse(gameJSON)
-var walls = gameJSON["Level1"]["walls"]
+walls = gameJSON["Level" + gameLvl]["walls"]
 
 playerImg = new Image()
 playerImg.src = 'images/player.png'
 
 end = new Image()
 end.src = 'images/end.png'
+endRect = new Rect(gameJSON["Level" + gameLvl]["end"]["x"], gameJSON["Level" + gameLvl]["end"]["y"], 50, 50)
 
 cloud = new Image()
 cloud.src = 'images/Cloud_01.png'
 
-cloud_positions = gameJSON["Level1"]["cloudPositions"]
+cloud_positions = gameJSON["Level" + gameLvl]["cloudPositions"]
 
-var colors = []
-walls.forEach(function (i) {
-	for (var j = i[1]; j < i[1] + i[3]; j = j + 10) {
-		for (var k = i[0]; k < i[0] + i[2]; k = k + 10) {
-			if ((j - i[1]) <= 30) {
-				color = Math.floor((Math.random() * 255) + 1)
-				colors.push('rgb(0, ' + color + ', 0)')
-			}
-			else {
-				color = Math.floor((Math.random() * 153) + 50)
-				colors.push('rgb(' + color + ', 0, 0)')
+// Random terrain color rendering
+function generateColors () {
+	var colors = []
+	walls.forEach(function (i) {
+		for (var j = i[1]; j < i[1] + i[3]; j = j + 10) {
+			for (var k = i[0]; k < i[0] + i[2]; k = k + 10) {
+				if ((j - i[1]) <= 30) {
+					color = Math.floor((Math.random() * 255) + 1)
+					colors.push('rgb(0, ' + color + ', 0)')
+				}
+				else {
+					color = Math.floor((Math.random() * 153) + 50)
+					colors.push('rgb(' + color + ', 0, 0)')
+				}
 			}
 		}
-	}
-})
-precanvas = document.createElement('canvas')
-precanvas.width = canvas.width
-precanvas.height = canvas.height
-prectx = precanvas.getContext('2d')
-var count = 0
-walls.forEach(function (i) {
-	for (var j = i[1]; j < i[1] + i[3]; j = j + 10) {
-		for (var k = i[0]; k < i[0] + i[2]; k = k + 10, count++) {
-			prectx.fillStyle = colors[count]
-			prectx.fillRect(k, j, 10, 10)
+	})
+	precanvas = document.createElement('canvas')
+	precanvas.width = canvas.width
+	precanvas.height = canvas.height
+	prectx = precanvas.getContext('2d')
+	var count = 0
+	walls.forEach(function (i) {
+		for (var j = i[1]; j < i[1] + i[3]; j = j + 10) {
+			for (var k = i[0]; k < i[0] + i[2]; k = k + 10, count++) {
+				prectx.fillStyle = colors[count]
+				prectx.fillRect(k, j, 10, 10)
+			}
 		}
-	}
-})
+	})
+}
+generateColors()
 
+// Key detection setup
+var keys = {}
+
+addEventListener("keydown", function (key) {
+	keys[key.keyCode] = true;
+}, false);
+
+addEventListener("keyup", function (key) {
+	delete keys[key.keyCode];
+}, false);
+
+// Player object (pretty BIG!)
 var player = {
+	// Init all the stuff
 	xvel: 0,
 	yvel: 0,
 	x: 0,
 	y: 0,
 	rect: new Rect(this.x, this.y, 35, 35),
+	// Platformer bumpers
 	topRect: new Rect(this.x + 5, this.y - 8, 30, 5),
 	bottomRect: new Rect(this.x + 2.5, this.y + 35, 30, 5),
 	wallRight: new Rect(this.x + 32, this.y, 5, 35),
 	wallLeft: new Rect(this.x - 2, this.y, 5, 35),
+	// Updates the player rect and the bumper rects
 	updateRect: function () {
 		this.rect = new Rect(this.x, this.y, 35, 35)
 		this.topRect = new Rect(this.x + 2.5, this.y, 30, 5)
@@ -124,6 +155,7 @@ var player = {
 		this.wallRight = new Rect(this.x + 32, this.y - 2.5, 5, 30)
 		this.wallLeft = new Rect(this.x - 2, this.y - 2.5, 5, 30)
 	},
+	// Updates x position after looking at wall collisions and current x velocity.
 	updateX: function () {
 		if (this.x <= 0 || this.x >= canvas.width) {
 			this.xvel *= -1
@@ -141,6 +173,7 @@ var player = {
 			player.xvel -= player.xvel / (4 * Math.abs(player.xvel))
 		}
 	},
+	// Updates y position after looking at top and ground collisions and current y velocity.
 	updateY: function () {
 		var collideBottom = false
 		var collideTop = false
@@ -190,10 +223,10 @@ var player = {
 		}
 	}
 }
-player.x = gameJSON["Level1"]["startPoint"]["x"]
-player.y = gameJSON["Level1"]["startPoint"]["y"]
+player.x = gameJSON["Level" + gameLvl]["startPoint"]["x"]
+player.y = gameJSON["Level" + gameLvl]["startPoint"]["y"]
 
-
+// A smallish object type for easy rectangle collision comparision
 function Rect(x, y, width, height) {
 	this.x = x;
 	this.y = y;
@@ -206,8 +239,9 @@ function Rect(x, y, width, height) {
 		this.y + this.height > other.y;
 	};
 };
-
+// Mainloop.
 mainLoop = function () {
+	// All the key detection.
 	if (39 in keys) {
 		player.xvel += 0.5
 	}
@@ -223,13 +257,37 @@ mainLoop = function () {
 	if (38 in keys && collideBottom) {
 		player.yvel -= 10
 	}
+	// Update player position.	
 	player.x += player.xvel
 	player.y += player.yvel
 
+	// Update player rectangle.
 	player.updateRect()
 
+	// Update xvel and yvel.
 	player.updateX()
 	player.updateY()
+
+	if (player.rect.collidesWith(endRect)) {
+		gameLvl += 1
+		walls = gameJSON["Level" + gameLvl]["walls"]
+
+		playerImg = new Image()
+		playerImg.src = 'images/player.png'
+
+		end = new Image()
+		end.src = 'images/end.png'
+		endRect = new Rect(gameJSON["Level" + gameLvl]["end"]["x"], gameJSON["Level" + gameLvl]["end"]["y"], 50, 50)
+
+		cloud = new Image()
+		cloud.src = 'images/Cloud_01.png'
+
+		cloud_positions = gameJSON["Level" + gameLvl]["cloudPositions"]
+		player.x = gameJSON["Level" + gameLvl]["startPoint"]["x"]
+		player.y = gameJSON["Level" + gameLvl]["startPoint"]["y"]
+
+		generateColors()
+	}
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
 	ctx.fillStyle = 'rgb(204, 204, 255)'
@@ -243,9 +301,10 @@ mainLoop = function () {
 		}
 	})
 
-	ctx.drawImage(end, gameJSON["Level1"]["end"]["x"], gameJSON["Level1"]["end"]["y"])
+	ctx.drawImage(end, gameJSON["Level" + gameLvl]["end"]["x"], gameJSON["Level" + gameLvl]["end"]["y"])
 	ctx.drawImage(playerImg, player.x, player.y)
 
+	// If you uncomment this, it displays the player bumpers. Use for dev/debugging.
 	/*ctx.fillStyle = 'rgb(0, 0, 0)'
 	rects = [player.bottomRect, player.topRect, player.wallRight, player.wallLeft]
 	rects.forEach(function(i) {
