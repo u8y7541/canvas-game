@@ -51,6 +51,16 @@ gameJSON = `{
 		"startPoint": {
 			"x": 10,
 			"y": 350
+		},
+		"cloudPositions": [
+			[50, 100],
+			[600, 200],
+			[300, 300],
+			[800, 50]
+		],
+		"end": {
+			"x": 750,
+			"y": 80
 		}
 	}
 }`
@@ -60,10 +70,13 @@ var walls = gameJSON["Level1"]["walls"]
 playerImg = new Image()
 playerImg.src = 'images/player.png'
 
+end = new Image()
+end.src = 'images/end.png'
+
 cloud = new Image()
 cloud.src = 'images/Cloud_01.png'
 
-cloud_positions = [[50, 100], [600, 200], [300, 300], [800, 50]]
+cloud_positions = gameJSON["Level1"]["cloudPositions"]
 
 var colors = []
 walls.forEach(function (i) {
@@ -230,6 +243,7 @@ mainLoop = function () {
 		}
 	})
 
+	ctx.drawImage(end, gameJSON["Level1"]["end"]["x"], gameJSON["Level1"]["end"]["y"])
 	ctx.drawImage(playerImg, player.x, player.y)
 
 	/*ctx.fillStyle = 'rgb(0, 0, 0)'
