@@ -80,7 +80,7 @@ gameJSON = `{
 		"startPoint": {
 			"x": 100,
 			"y": 350
-		}
+		},
 		"cloudPositions": [],
 		"end": {
 			"x": 910,
