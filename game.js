@@ -31,7 +31,7 @@ document.body.appendChild(canvas)
 
 // All the game level data fitted into a JSON for easy editing.
 gameJSON = `{
-	"Level1": {
+	"Level2": {
 		"walls": [
 			[0, 400, 960, 240],
 			[0, 200, 100, 100],
@@ -54,7 +54,7 @@ gameJSON = `{
 			"y": 80
 		}
 	},
-	"Level2": {
+	"Level1": {
 		"walls": [
 			[0, 400, 960, 240],
 			[480, 350, 100, 90]
@@ -64,7 +64,9 @@ gameJSON = `{
 			"y": 200
 		},
 		"cloudPositions": [
-			[200, 200]
+			[200, 200],
+			[500, 100],
+			[800, 250]
 		],
 		"end": {
 			"x": 910,
@@ -74,8 +76,11 @@ gameJSON = `{
 	"Level3": {
 		"walls": [
 			[0, 400, 960, 240],
-			[0, 300, 100, 100],
-			[200, 200, 100, 200]
+			[0, 300, 100, 140],
+			[200, 200, 100, 240],
+			[500, 200, 200, 240],
+			[700, 100, 100, 200],
+			[900, 100, 60, 100]
 		],
 		"startPoint": {
 			"x": 100,
@@ -309,6 +314,9 @@ mainLoop = function () {
 		cloud_positions = gameJSON["Level" + gameLvl]["cloudPositions"]
 		player.x = gameJSON["Level" + gameLvl]["startPoint"]["x"]
 		player.y = gameJSON["Level" + gameLvl]["startPoint"]["y"]
+
+		player.xvel = 0
+		player.yvel = 0
 
 		generateColors()
 	}
