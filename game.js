@@ -86,7 +86,12 @@ gameJSON = `{
 			"x": 100,
 			"y": 350
 		},
-		"cloudPositions": [],
+		"cloudPositions": [
+			[50, 100],
+			[200, 250],
+			[500, 150],
+			[-300, 200]
+		],
 		"end": {
 			"x": 910,
 			"y": 350
@@ -95,7 +100,7 @@ gameJSON = `{
 }`
 
 // All the initializing.
-gameLvl = 1
+gameLvl = 3
 gameJSON = JSON.parse(gameJSON)
 walls = gameJSON["Level" + gameLvl]["walls"]
 
@@ -268,6 +273,7 @@ function Rect(x, y, width, height) {
 		this.y + this.height > other.y;
 	};
 };
+
 // Mainloop.
 mainLoop = function () {
 	// All the key detection.
