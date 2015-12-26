@@ -100,7 +100,7 @@ gameJSON = `{
 }`
 
 // All the initializing.
-gameLvl = 3
+gameLvl = 1 // Change this for dev/testing when you want to test one level.
 gameJSON = JSON.parse(gameJSON)
 walls = gameJSON["Level" + gameLvl]["walls"]
 
