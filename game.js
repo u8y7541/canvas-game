@@ -29,8 +29,28 @@ transform: scale(0.8); \
 canvas.setAttributeNode(attrib)
 document.body.appendChild(canvas)
 
-// All the game level data fitted into a JSON for easy editing.
-gameJSON = `{
+// All the game level data fitted into a nice JSON for easy editing.
+var gameJSON = {
+	"Level1": {
+		"walls": [
+			[0, 400, 960, 240],
+			[480, 350, 100, 90]
+		],
+		"startPoint": {
+			"x": 50,
+			"y": 200
+		},
+		"cloudPositions": [
+			[200, 200],
+			[500, 100],
+			[800, 250]
+		],
+		"end": {
+			"x": 910,
+			"y": 350
+		},
+		"rain": false
+	},
 	"Level2": {
 		"walls": [
 			[0, 400, 960, 240],
@@ -54,26 +74,6 @@ gameJSON = `{
 			"y": 80
 		},
 		"rain": true
-	},
-	"Level1": {
-		"walls": [
-			[0, 400, 960, 240],
-			[480, 350, 100, 90]
-		],
-		"startPoint": {
-			"x": 50,
-			"y": 200
-		},
-		"cloudPositions": [
-			[200, 200],
-			[500, 100],
-			[800, 250]
-		],
-		"end": {
-			"x": 910,
-			"y": 350
-		},
-		"rain": false
 	},
 	"Level3": {
 		"walls": [
@@ -100,11 +100,10 @@ gameJSON = `{
 		},
 		"rain": true
 	}
-}`
+}
 
 // All the initializing.
 gameLvl = 1 // Change this for dev/testing when you want to test one level.
-gameJSON = JSON.parse(gameJSON)
 walls = gameJSON["Level" + gameLvl]["walls"]
 
 playerImg = new Image()
