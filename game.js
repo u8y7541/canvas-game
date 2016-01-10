@@ -338,8 +338,8 @@ function Rain() {
 			ctx.fillRect(this.x, this.y, 5, 30)
 		}
 		else {
-			particles.push(new Particle(this.x, this.y, 5 - Math.floor(Math.random() * 10), -10, 'rgb(0, 0, 255)', 5))
-			particles.push(new Particle(this.x, this.y, 5 - Math.floor(Math.random() * 10), -10, 'rgb(0, 0, 255)', 5))
+			particles.push(new Particle(this.x, this.y, 5 - Math.floor(Math.random() * 10), -5, 'rgb(0, 0, 255)', 5))
+			particles.push(new Particle(this.x, this.y, 5 - Math.floor(Math.random() * 10), -5, 'rgb(0, 0, 255)', 5))
 			this.x = Math.floor(Math.random() * 960)
 			this.y = Math.floor(Math.random() * -200)
 			this.stopped = false
