@@ -52,7 +52,8 @@ gameJSON = `{
 		"end": {
 			"x": 750,
 			"y": 80
-		}
+		},
+		"rain": true
 	},
 	"Level1": {
 		"walls": [
@@ -71,7 +72,8 @@ gameJSON = `{
 		"end": {
 			"x": 910,
 			"y": 350
-		}
+		},
+		"rain": false
 	},
 	"Level3": {
 		"walls": [
@@ -95,7 +97,8 @@ gameJSON = `{
 		"end": {
 			"x": 910,
 			"y": 350
-		}
+		},
+		"rain": true
 	}
 }`
 
@@ -274,6 +277,82 @@ function Rect(x, y, width, height) {
 	};
 };
 
+// Will use this for nice effects and stuff.
+numParticles = 0
+function Particle(x, y, xvel, yvel, color, size) {
+	numParticles += 1
+	this.x = x;
+	this.y = y;
+	this.xvel = xvel;
+	this.yvel = yvel;
+	this.size = size
+	this.stopped = false
+	this.color = color
+	this.rect = new Rect(this.x, this.y, this.size, this.size)
+	this.update = function () {
+		this.xvel -= this.xvel / (4 * Math.abs(this.xvel))
+		this.yvel += 0.5
+		this.x += this.xvel
+		this.y += this.yvel
+		this.rect = new Rect(this.x, this.y, this.size, this.size)
+		that = this
+		walls.forEach(function (i) {
+			if (that.rect.collidesWith(new Rect(i[0], i[1], i[2], i[3]))) {
+				that.stopped = true
+				numParticles -= 1
+			}
+		})
+	}
+	this.render = function () {
+		ctx.fillStyle = this.color
+		if (!this.stopped) {
+			ctx.fillRect(this.x, this.y, this.size, this.size)
+		}
+	}
+}
+
+// Rain object.
+function Rain() {
+	this.x = Math.floor(Math.random() * 960)
+	this.y = Math.floor(Math.random() * -200);
+	this.yvel = 0;
+	this.stopped = false
+	this.rect = new Rect(this.x, this.y, 5, 30)
+	this.update = function () {
+		if (!this.stopped) {
+			this.yvel += 0.5
+		}
+		this.y += this.yvel
+		this.rect = new Rect(this.x, this.y, 5, 30)
+		that = this
+		walls.forEach(function (i) {
+			if (that.rect.collidesWith(new Rect(i[0], i[1], i[2], i[3]))) {
+				that.yvel = 0
+				that.stopped = true
+			}
+		})
+	}
+	this.render = function () {
+		ctx.fillStyle = 'rgb(26, 102, 255)' // Heheh, too lazy to use a color picker.
+		if (!this.stopped) {
+			ctx.fillRect(this.x, this.y, 5, 30)
+		}
+		else {
+			particles.push(new Particle(this.x, this.y, 5 - Math.floor(Math.random() * 10), -10, 'rgb(0, 0, 255)', 5))
+			particles.push(new Particle(this.x, this.y, 5 - Math.floor(Math.random() * 10), -10, 'rgb(0, 0, 255)', 5))
+			this.x = Math.floor(Math.random() * 960)
+			this.y = Math.floor(Math.random() * -200)
+			this.stopped = false
+		}
+	}
+}
+
+
+rain = []
+for (var i = 0; i < 50; i++) {
+	rain.push(new Rain())
+};
+particles = []
 // Mainloop.
 mainLoop = function () {
 	// All the key detection.
@@ -328,7 +407,12 @@ mainLoop = function () {
 	}
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
-	ctx.fillStyle = 'rgb(204, 204, 255)'
+	if (gameJSON["Level" + gameLvl]["rain"]) {
+		ctx.fillStyle = 'rgb(229, 229, 220)'
+	}
+	else {
+		ctx.fillStyle = 'rgb(204, 204, 255)'
+	}
 	ctx.fillRect(0, 0, canvas.width, canvas.height)
 
 	cloud_positions.forEach(function (i) {
@@ -341,6 +425,22 @@ mainLoop = function () {
 
 	ctx.drawImage(end, gameJSON["Level" + gameLvl]["end"]["x"], gameJSON["Level" + gameLvl]["end"]["y"])
 	ctx.drawImage(playerImg, player.x, player.y)
+
+	if (gameJSON["Level" + gameLvl]["rain"]) {
+		rain.forEach(function (i) {
+			i.update()
+			i.render()
+		})
+	}
+
+	particles.forEach(function (i) {
+		i.update()
+		i.render()
+	})
+	if (numParticles > 100) {
+		particles = particles.slice(0, 100)
+		numParticles = 0
+	}
 
 	// If you uncomment this, it displays the player bumpers. Use for dev/debugging.
 	/*ctx.fillStyle = 'rgb(0, 0, 0)'
