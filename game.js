@@ -49,7 +49,9 @@ var gameJSON = {
 			"x": 910,
 			"y": 350
 		},
-		"rain": false
+		"time": "day",
+		"rain": false,
+		"lights": []
 	},
 	"Level2": {
 		"walls": [
@@ -73,7 +75,9 @@ var gameJSON = {
 			"x": 750,
 			"y": 80
 		},
-		"rain": true
+		"time": "day",
+		"rain": true,
+		"lights": []
 	},
 	"Level3": {
 		"walls": [
@@ -98,7 +102,41 @@ var gameJSON = {
 			"x": 910,
 			"y": 350
 		},
-		"rain": true
+		"time": "night",
+		"rain": true,
+		"lights": [
+			[335, 240],
+			[817.5, 100, "small"],
+			[817.5, 180, "small"],
+			[817.5, 260, "small"],
+			[817.5, 340, "small"],
+			[737.5, 340, "small"],
+		]
+	},
+	"Level4": {
+		"walls": [
+			[0, 400, 960, 240],
+			[860, 250, 100, 190],
+			[660, 150, 100, 100],
+			[110, 150, 500, 100]
+		],
+		"startPoint": {
+			"x": 100,
+			"y": 350
+		},
+		"cloudPositions": [
+			[100, 100],
+			[400, 200],
+			[-100, 300],
+			[-300, 150]
+		],
+		"end": {
+			"x": 110,
+			"y": 100
+		},
+		"time": "dawn",
+		"rain": true,
+		"lights": []
 	}
 }
 
@@ -116,7 +154,15 @@ endRect = new Rect(gameJSON["Level" + gameLvl]["end"]["x"], gameJSON["Level" + g
 cloud = new Image()
 cloud.src = 'images/Cloud_01.png'
 
+light = new Image()
+light.src = 'images/light.png'
+smallLight = new Image()
+smallLight.src = 'images/smallLight.png'
+
 cloud_positions = gameJSON["Level" + gameLvl]["cloudPositions"]
+time = gameJSON["Level" + gameLvl]["time"]
+isRain = gameJSON["Level" + gameLvl]["rain"]
+lights = gameJSON["Level" + gameLvl]["lights"]
 
 // Random terrain color rendering
 function generateColors () {
@@ -383,22 +429,18 @@ mainLoop = function () {
 
 	if (player.rect.collidesWith(endRect)) {
 		gameLvl += 1
+		// Load next level data
 		walls = gameJSON["Level" + gameLvl]["walls"]
-
-		playerImg = new Image()
-		playerImg.src = 'images/player.png'
-
-		end = new Image()
-		end.src = 'images/end.png'
 		endRect = new Rect(gameJSON["Level" + gameLvl]["end"]["x"], gameJSON["Level" + gameLvl]["end"]["y"], 50, 50)
 
-		cloud = new Image()
-		cloud.src = 'images/Cloud_01.png'
-
+		// Load cosmetics
 		cloud_positions = gameJSON["Level" + gameLvl]["cloudPositions"]
+		time = gameJSON["Level" + gameLvl]["time"]
+		isRain = gameJSON["Level" + gameLvl]["rain"]
+		lights = gameJSON["Level" + gameLvl]["lights"]
+
 		player.x = gameJSON["Level" + gameLvl]["startPoint"]["x"]
 		player.y = gameJSON["Level" + gameLvl]["startPoint"]["y"]
-
 		player.xvel = 0
 		player.yvel = 0
 
@@ -406,12 +448,20 @@ mainLoop = function () {
 	}
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
-	if (gameJSON["Level" + gameLvl]["rain"]) {
-		ctx.fillStyle = 'rgb(229, 229, 220)'
-	}
-	else {
+	
+	if (time == "day") {
 		ctx.fillStyle = 'rgb(204, 204, 255)'
 	}
+	if (isRain) {
+		ctx.fillStyle = 'rgb(229, 229, 220)'
+	}
+	if (time == "night") {
+		ctx.fillStyle = 'rgb(0, 0, 153)'
+	}
+	if (time == "dawn") {
+		ctx.fillStyle = 'rgb(255, 204, 179)'
+	}
+
 	ctx.fillRect(0, 0, canvas.width, canvas.height)
 
 	cloud_positions.forEach(function (i) {
@@ -425,7 +475,7 @@ mainLoop = function () {
 	ctx.drawImage(end, gameJSON["Level" + gameLvl]["end"]["x"], gameJSON["Level" + gameLvl]["end"]["y"])
 	ctx.drawImage(playerImg, player.x, player.y)
 
-	if (gameJSON["Level" + gameLvl]["rain"]) {
+	if (isRain) {
 		rain.forEach(function (i) {
 			i.update()
 			i.render()
@@ -440,6 +490,14 @@ mainLoop = function () {
 		particles = particles.slice(0, 100)
 		numParticles = 0
 	}
+	lights.forEach(function (i) {
+		if (i[2] == "small") {
+			ctx.drawImage(smallLight, i[0], i[1])
+		}
+		else {
+			ctx.drawImage(light, i[0], i[1])
+		}
+	})
 
 	// If you uncomment this, it displays the player bumpers. Use for dev/debugging.
 	/*ctx.fillStyle = 'rgb(0, 0, 0)'
