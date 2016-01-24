@@ -151,7 +151,11 @@ var gameJSON = {
 			"x": 100,
 			"y": 350
 		},
-		"cloudPositions": [],
+		"cloudPositions": [
+			[50, 200],
+			[500, 300],
+			[-300, 100]
+		],
 		"end": {
 			"x": 800,
 			"y": 350
