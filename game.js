@@ -51,7 +51,8 @@ var gameJSON = {
 		},
 		"time": "day",
 		"rain": false,
-		"lights": []
+		"lights": [],
+		"portals": []
 	},
 	"Level2": {
 		"walls": [
@@ -77,7 +78,8 @@ var gameJSON = {
 		},
 		"time": "day",
 		"rain": true,
-		"lights": []
+		"lights": [],
+		"portals": []
 	},
 	"Level3": {
 		"walls": [
@@ -111,7 +113,8 @@ var gameJSON = {
 			[817.5, 260, "small"],
 			[817.5, 340, "small"],
 			[737.5, 340, "small"],
-		]
+		],
+		"portals": []
 	},
 	"Level4": {
 		"walls": [
@@ -136,7 +139,32 @@ var gameJSON = {
 		},
 		"time": "dawn",
 		"rain": true,
-		"lights": []
+		"lights": [],
+		"portals": []
+	},
+	"Level5": {
+		"walls": [
+			[0, 400, 960, 240],
+			[480, 0, 100, 440]
+		],
+		"startPoint": {
+			"x": 100,
+			"y": 350
+		},
+		"cloudPositions": [],
+		"end": {
+			"x": 800,
+			"y": 350
+		},
+		"time": "day",
+		"rain": false,
+		"lights": [],
+		"portals": [
+			{
+				"position": [430, 350],
+				"endpoint": [600, 300]
+			}
+		]
 	}
 }
 
@@ -159,10 +187,18 @@ light.src = 'images/light.png'
 smallLight = new Image()
 smallLight.src = 'images/smallLight.png'
 
+portal = new Image()
+portal.src = 'images/portal.png'
+
 cloud_positions = gameJSON["Level" + gameLvl]["cloudPositions"]
 time = gameJSON["Level" + gameLvl]["time"]
 isRain = gameJSON["Level" + gameLvl]["rain"]
 lights = gameJSON["Level" + gameLvl]["lights"]
+
+portals = gameJSON["Level" + gameLvl]["portals"]
+portals.forEach(function (i) {
+	i["rectangle"] = new Rect(i["position"][0], i["position"][1], 50, 50)
+})
 
 // Random terrain color rendering
 function generateColors () {
@@ -439,6 +475,11 @@ mainLoop = function () {
 		isRain = gameJSON["Level" + gameLvl]["rain"]
 		lights = gameJSON["Level" + gameLvl]["lights"]
 
+		portals = gameJSON["Level" + gameLvl]["portals"]
+		portals.forEach(function (i) {
+			i["rectangle"] = new Rect(i["position"][0], i["position"][1], 50, 50)
+		})
+
 		player.x = gameJSON["Level" + gameLvl]["startPoint"]["x"]
 		player.y = gameJSON["Level" + gameLvl]["startPoint"]["y"]
 		player.xvel = 0
@@ -447,6 +488,12 @@ mainLoop = function () {
 		generateColors()
 	}
 
+	portals.forEach(function (i) {
+		if (player.rect.collidesWith(i["rectangle"])) {
+			player.x = i["endpoint"][0]
+			player.y = i["endpoint"][1]
+		}
+	})
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
 	
 	if (time == "day") {
@@ -497,6 +544,9 @@ mainLoop = function () {
 		else {
 			ctx.drawImage(light, i[0], i[1])
 		}
+	})
+	portals.forEach(function (i) {
+		ctx.drawImage(portal, i["position"][0], i["position"][1])
 	})
 
 	// If you uncomment this, it displays the player bumpers. Use for dev/debugging.
