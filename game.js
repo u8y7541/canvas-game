@@ -52,7 +52,10 @@ var gameJSON = {
 		"time": "day",
 		"rain": false,
 		"lights": [],
-		"portals": []
+		"portals": [],
+		"spikes": [
+			[]
+		]
 	},
 	"Level2": {
 		"walls": [
@@ -79,7 +82,10 @@ var gameJSON = {
 		"time": "day",
 		"rain": true,
 		"lights": [],
-		"portals": []
+		"portals": [],
+		"spikes": [
+			[231, 115]
+		]
 	},
 	"Level3": {
 		"walls": [
@@ -114,7 +120,8 @@ var gameJSON = {
 			[817.5, 340, "small"],
 			[737.5, 340, "small"],
 		],
-		"portals": []
+		"portals": [],
+		"spikes": []
 	},
 	"Level4": {
 		"walls": [
@@ -140,7 +147,8 @@ var gameJSON = {
 		"time": "dawn",
 		"rain": true,
 		"lights": [],
-		"portals": []
+		"portals": [],
+		"spikes": []
 	},
 	"Level5": {
 		"walls": [
@@ -168,7 +176,8 @@ var gameJSON = {
 				"position": [430, 350],
 				"endpoint": [600, 300]
 			}
-		]
+		],
+		"spikes": []
 	}
 }
 
@@ -203,6 +212,10 @@ portals = gameJSON["Level" + gameLvl]["portals"]
 portals.forEach(function (i) {
 	i["rectangle"] = new Rect(i["position"][0], i["position"][1], 50, 50)
 })
+
+spike = new Image()
+spike.src = 'images/spike.png'
+spikes = gameJSON["Level" + gameLvl]["spikes"]
 
 // Random terrain color rendering
 function generateColors () {
@@ -269,6 +282,21 @@ var player = {
 	bottomRect: new Rect(this.x + 2.5, this.y + 35, 30, 5),
 	wallRight: new Rect(this.x + 32, this.y, 5, 35),
 	wallLeft: new Rect(this.x - 2, this.y, 5, 35),
+	spikesCollide: function () {
+		that = this
+		collideSpike = false
+		spikes.forEach(function (i) {
+			spikeRects = [new Rect(i[0], i[1] - 10, 5, 10), new Rect(i[0] + 5, i[1] - 18.3, 5, 18.3), new Rect(i[0] + 10, i[1] - 26.6, 5, 26.6),
+			new Rect(i[0] + 15, i[1] - 35, 5, 35), new Rect(i[0] + 20, i[1] - 26.6, 5, 26.6), new Rect(i[0] + 25, i[1] - 18.3, 5, 18.3),
+			new Rect(i[0] + 30, i[1] - 10, 5, 10)]
+			spikeRects.forEach(function (j) {
+				if (that.rect.collidesWith(j)) {
+					collideSpike = true
+				}
+			})
+		})
+		return collideSpike
+	},
 	// Updates the player rect and the bumper rects
 	updateRect: function () {
 		this.rect = new Rect(this.x, this.y, 35, 35)
@@ -278,7 +306,7 @@ var player = {
 		this.wallLeft = new Rect(this.x - 2, this.y - 2.5, 5, 30)
 	},
 	// Updates x position after looking at wall collisions and current x velocity.
-	updateX: function () {
+	updateX: function () {		
 		if (this.x <= 0 || this.x >= canvas.width) {
 			this.xvel *= -1
 		}
@@ -484,6 +512,9 @@ mainLoop = function () {
 			i["rectangle"] = new Rect(i["position"][0], i["position"][1], 50, 50)
 		})
 
+		spikes = gameJSON["Level" + gameLvl]["spikes"]
+		console.log(spikes);
+
 		player.x = gameJSON["Level" + gameLvl]["startPoint"]["x"]
 		player.y = gameJSON["Level" + gameLvl]["startPoint"]["y"]
 		player.xvel = 0
@@ -549,8 +580,17 @@ mainLoop = function () {
 			ctx.drawImage(light, i[0], i[1])
 		}
 	})
+	if (player.spikesCollide()) {
+		player.xvel = 0
+		player.yvel = 0
+		player.x = gameJSON["Level" + gameLvl]["startPoint"]["x"]
+		player.y = gameJSON["Level" + gameLvl]["startPoint"]["y"]
+	}
 	portals.forEach(function (i) {
 		ctx.drawImage(portal, i["position"][0], i["position"][1])
+	})
+	spikes.forEach(function (i) {
+		ctx.drawImage(spike, i[0], i[1])
 	})
 
 	// If you uncomment this, it displays the player bumpers. Use for dev/debugging.
