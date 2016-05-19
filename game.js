@@ -84,7 +84,7 @@ var gameJSON = {
 		"lights": [],
 		"portals": [],
 		"spikes": [
-			[231, 115]
+			[381, 115]
 		]
 	},
 	"Level3": {
