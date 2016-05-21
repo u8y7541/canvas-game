@@ -7,8 +7,8 @@ My first try at a canvas game in Javascript.
 - ~~Level system~~
 - ~~Speed cap for character~~ (not going to do it, keeping it as it is)
 - ~~Portals~~ and switches to make it puzzle-y
-- More levels
-- Weather for different levels (~~rain~~, ~~night time~~, etc.)
+- ~~More~~ levels (Just added some!)
+- ~~Weather for different levels~~ (~~rain~~, ~~night time~~, ~~etc.~~)
 - Storyline?
 - Creepy horror ambience
 
