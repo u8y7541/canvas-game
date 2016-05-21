@@ -84,10 +84,36 @@ var gameJSON = {
 	"Level3": {
 		"walls": [
 			[0, 400, 960, 240],
-			[300, 290, 100, 110],
-			[0, 180, 130, 100],
-			[330, 70, 100, 100],
-			[450, 70, 200, 100]
+			[100, 310, 860, 330],
+			[200, 220, 760, 420],
+			[300, 130, 660, 510],
+		],
+		"startPoint": {
+			"x": 10,
+			"y": 350
+		},
+		"cloudPositions": [
+			[300, 150],
+			[450, 320],
+			[50, 200]
+		],
+		"end": {
+			"x": 350,
+			"y": 80
+		},
+		"time": "day",
+		"rain": false,
+		"lights": [],
+		"portals": [],
+		"spikes": []
+	},
+	"Level4": {
+		"walls": [
+			[0, 400, 960, 240],
+			[300, 310, 100, 90],
+			[0, 220, 130, 100],
+			[330, 120, 100, 100],
+			[500, 120, 200, 100]
 		],
 		"startPoint": {
 			"x": 10,
@@ -99,7 +125,7 @@ var gameJSON = {
 		],
 		"end": {
 			"x": 525,
-			"y": 20
+			"y": 70
 		},
 		"time": "day",
 		"rain": false,
@@ -107,7 +133,38 @@ var gameJSON = {
 		"portals": [],
 		"spikes": []
 	},
-	"Level4": {
+	"Level5": {
+		"walls": [
+			[0, 400, 960, 240],
+			[700, 310, 100, 90],
+			[100, 200, 100, 100],
+			[300, 150, 100, 100]
+		],
+		"startPoint": {
+			"x": 10,
+			"y": 350
+		},
+		"cloudPositions": [
+			[300, 150],
+			[450, 320],
+			[600, 200]
+		],
+		"end": {
+			"x": 325,
+			"y": 100
+		},
+		"time": "day",
+		"rain": false,
+		"lights": [],
+		"portals": [
+			{
+				"position": [725, 260],
+				"endpoint": [150, 150]
+			}
+		],
+		"spikes": []
+	},
+	"Level6": {
 		"walls": [
 			[0, 400, 960, 240],
 			[0, 200, 100, 100],
@@ -132,12 +189,15 @@ var gameJSON = {
 		"time": "day",
 		"rain": true,
 		"lights": [],
-		"portals": [],
-		"spikes": [
-			[381, 115]
-		]
+		"portals": [
+			{
+				"position": [300, 350],
+				"endpoint": [50, 150]
+			}
+		],
+		"spikes": []
 	},
-	"Level5": {
+	"Level7": {
 		"walls": [
 			[0, 400, 960, 240],
 			[0, 300, 100, 140],
@@ -170,10 +230,15 @@ var gameJSON = {
 			[817.5, 340, "small"],
 			[737.5, 340, "small"],
 		],
-		"portals": [],
+		"portals": [
+			{
+				"position": [350, 350],
+				"endpoint": [225, 150]
+			}
+		],
 		"spikes": []
 	},
-	"Level6": {
+	"Level8": {
 		"walls": [
 			[0, 400, 960, 240],
 			[860, 250, 100, 190],
@@ -200,7 +265,7 @@ var gameJSON = {
 		"portals": [],
 		"spikes": []
 	},
-	"Level7": {
+	"Level9": {
 		"walls": [
 			[0, 400, 960, 240],
 			[480, 0, 100, 440]
@@ -563,7 +628,6 @@ mainLoop = function () {
 		})
 
 		spikes = gameJSON["Level" + gameLvl]["spikes"]
-		console.log(spikes);
 
 		player.x = gameJSON["Level" + gameLvl]["startPoint"]["x"]
 		player.y = gameJSON["Level" + gameLvl]["startPoint"]["y"]
