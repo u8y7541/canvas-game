@@ -13,7 +13,8 @@ var ctx = canvas.getContext('2d')
 canvas.width = 960
 canvas.height = 640
 var attrib = document.createAttribute('style')
-attrib.value = ' \
+// This shrinks the game by a factor of 0.8
+/*attrib.value = ' \
 -webkit-transform-origin: 0 0; \
 -webkit-transform: scale(0.8); \
 \
@@ -25,276 +26,11 @@ attrib.value = ' \
 \
 transform-origin: 0 0; \
 transform: scale(0.8); \
-'
+'*/
 canvas.setAttributeNode(attrib)
 document.body.appendChild(canvas)
 
-// All the game level data fitted into a nice JSON for easy editing.
-var gameJSON = {
-	"Level1": {
-		"walls": [
-			[0, 400, 960, 240],
-			[480, 350, 100, 90]
-		],
-		"startPoint": {
-			"x": 50,
-			"y": 200
-		},
-		"cloudPositions": [
-			[200, 200],
-			[500, 100],
-			[800, 250]
-		],
-		"end": {
-			"x": 910,
-			"y": 350
-		},
-		"time": "day",
-		"rain": false,
-		"lights": [],
-		"portals": [],
-		"spikes": [
-			[]
-		]
-	},
-	"Level2": {
-		"walls": [
-			[0, 400, 960, 240],
-			[430, 290, 100, 100],
-			[580, 240, 100, 100]
-		],
-		"startPoint": {
-			"x": 10,
-			"y": 350
-		},
-		"cloudPositions": [
-			[50, 150],
-			[200, 200]
-		],
-		"end": {
-			"x": 605,
-			"y": 190
-		},
-		"time": "day",
-		"rain": true,
-		"lights": [],
-		"portals": [],
-		"spikes": []
-	},
-	"Level3": {
-		"walls": [
-			[0, 400, 960, 240],
-			[100, 310, 860, 330],
-			[200, 220, 760, 420],
-			[300, 130, 660, 510],
-		],
-		"startPoint": {
-			"x": 10,
-			"y": 350
-		},
-		"cloudPositions": [
-			[300, 150],
-			[450, 320],
-			[50, 200]
-		],
-		"end": {
-			"x": 350,
-			"y": 80
-		},
-		"time": "day",
-		"rain": false,
-		"lights": [],
-		"portals": [],
-		"spikes": []
-	},
-	"Level4": {
-		"walls": [
-			[0, 400, 960, 240],
-			[300, 310, 100, 90],
-			[0, 220, 130, 100],
-			[330, 120, 100, 100],
-			[500, 120, 200, 100]
-		],
-		"startPoint": {
-			"x": 10,
-			"y": 350
-		},
-		"cloudPositions": [
-			[300, 150],
-			[450, 320]
-		],
-		"end": {
-			"x": 525,
-			"y": 70
-		},
-		"time": "day",
-		"rain": false,
-		"lights": [],
-		"portals": [],
-		"spikes": []
-	},
-	"Level5": {
-		"walls": [
-			[0, 400, 960, 240],
-			[700, 310, 100, 90],
-			[100, 200, 100, 100],
-			[300, 150, 100, 100]
-		],
-		"startPoint": {
-			"x": 10,
-			"y": 350
-		},
-		"cloudPositions": [
-			[300, 150],
-			[450, 320],
-			[600, 200]
-		],
-		"end": {
-			"x": 325,
-			"y": 100
-		},
-		"time": "day",
-		"rain": false,
-		"lights": [],
-		"portals": [
-			{
-				"position": [725, 260],
-				"endpoint": [150, 150]
-			}
-		],
-		"spikes": []
-	},
-	"Level6": {
-		"walls": [
-			[0, 400, 960, 240],
-			[0, 200, 100, 100],
-			[200, 150, 100, 100],
-			[350, 150, 100, 100],
-			[600, 130, 200, 100]
-		],
-		"startPoint": {
-			"x": 10,
-			"y": 350
-		},
-		"cloudPositions": [
-			[50, 100],
-			[600, 200],
-			[300, 300],
-			[800, 50]
-		],
-		"end": {
-			"x": 750,
-			"y": 80
-		},
-		"time": "day",
-		"rain": true,
-		"lights": [],
-		"portals": [
-			{
-				"position": [300, 350],
-				"endpoint": [50, 150]
-			}
-		],
-		"spikes": []
-	},
-	"Level7": {
-		"walls": [
-			[0, 400, 960, 240],
-			[0, 300, 100, 140],
-			[200, 200, 100, 240],
-			[500, 200, 200, 240],
-			[700, 100, 100, 200],
-			[900, 100, 60, 100]
-		],
-		"startPoint": {
-			"x": 100,
-			"y": 350
-		},
-		"cloudPositions": [
-			[50, 100],
-			[200, 250],
-			[500, 150],
-			[-300, 200]
-		],
-		"end": {
-			"x": 910,
-			"y": 350
-		},
-		"time": "night",
-		"rain": true,
-		"lights": [
-			[335, 240],
-			[817.5, 100, "small"],
-			[817.5, 180, "small"],
-			[817.5, 260, "small"],
-			[817.5, 340, "small"],
-			[737.5, 340, "small"],
-		],
-		"portals": [
-			{
-				"position": [350, 350],
-				"endpoint": [225, 150]
-			}
-		],
-		"spikes": []
-	},
-	"Level8": {
-		"walls": [
-			[0, 400, 960, 240],
-			[860, 250, 100, 190],
-			[660, 150, 100, 100],
-			[110, 150, 500, 100]
-		],
-		"startPoint": {
-			"x": 100,
-			"y": 350
-		},
-		"cloudPositions": [
-			[100, 100],
-			[400, 200],
-			[-100, 300],
-			[-300, 150]
-		],
-		"end": {
-			"x": 110,
-			"y": 100
-		},
-		"time": "dawn",
-		"rain": true,
-		"lights": [],
-		"portals": [],
-		"spikes": []
-	},
-	"Level9": {
-		"walls": [
-			[0, 400, 960, 240],
-			[480, 0, 100, 440]
-		],
-		"startPoint": {
-			"x": 100,
-			"y": 350
-		},
-		"cloudPositions": [
-			[50, 200],
-			[500, 300],
-			[-300, 100]
-		],
-		"end": {
-			"x": 800,
-			"y": 350
-		},
-		"time": "day",
-		"rain": false,
-		"lights": [],
-		"portals": [
-			{
-				"position": [430, 350],
-				"endpoint": [600, 300]
-			}
-		],
-		"spikes": []
-	}
-}
+// Note: Level data is in levels.js.
 
 // All the initializing.
 gameLvl = 1 // Change this for dev/testing when you want to test one level.
@@ -384,6 +120,23 @@ window.addEventListener("keydown", function(e) {
     }
 }, false);
 
+// A smallish object type for easy rectangle collision comparision
+function Rect(x, y, width, height) {
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+	this.collidesWith = function (other) {
+		return this.x < other.x + other.width &&
+		this.x + this.width > other.x &&
+		this.y < other.y + other.height &&
+		this.y + this.height > other.y;
+	};
+	this.reassign = function (x, y, width, height) {
+		this.x = x, this.y = y, this.width = width, this.height = this.height
+	}
+};
+
 // Player object (pretty BIG!)
 var player = {
 	// Init all the stuff
@@ -414,11 +167,11 @@ var player = {
 	},
 	// Updates the player rect and the bumper rects
 	updateRect: function () {
-		this.rect = new Rect(this.x, this.y, 35, 35)
-		this.topRect = new Rect(this.x + 2.5, this.y, 30, 5)
-		this.bottomRect = new Rect(this.x + 2.5, this.y + 30, 30, 5)
-		this.wallRight = new Rect(this.x + 32, this.y - 2.5, 5, 30)
-		this.wallLeft = new Rect(this.x - 2, this.y - 2.5, 5, 30)
+		this.rect.reassign(this.x, this.y, 35, 35)
+		this.topRect.reassign(this.x + 2.5, this.y, 30, 5)
+		this.bottomRect.reassign(this.x + 2.5, this.y + 30, 30, 5)
+		this.wallRight.reassign(this.x + 32, this.y - 2.5, 5, 30)
+		this.wallLeft.reassign(this.x - 2, this.y - 2.5, 5, 30)
 	},
 	// Updates x position after looking at wall collisions and current x velocity.
 	updateX: function () {		
@@ -427,8 +180,12 @@ var player = {
 		}
 		var collideWalls = false
 		walls.forEach(function (i) {
-			if (player.wallRight.collidesWith(new Rect(i[0], i[1], i[2], i[3])) || player.wallLeft.collidesWith(new Rect(i[0], i[1], i[2], i[3]))) {
+			wall = new Rect(i[0], i[1], i[2], i[3])
+			if (player.wallRight.collidesWith(wall) || player.wallLeft.collidesWith(wall)) {
 				collideWalls = true
+				for (j = 0; j < Math.ceil(Math.random() * 10); j++) {
+					particles.push(new Particle(player.x + 35, player.y + 17.5, player.xvel * (0 - Math.random() * 0.5), -5, 'rgb(119, 90, 50)', 5))
+				}
 			}
 		})
 		if (collideWalls) {
@@ -491,20 +248,6 @@ var player = {
 player.x = gameJSON["Level" + gameLvl]["startPoint"]["x"]
 player.y = gameJSON["Level" + gameLvl]["startPoint"]["y"]
 
-// A smallish object type for easy rectangle collision comparision
-function Rect(x, y, width, height) {
-	this.x = x;
-	this.y = y;
-	this.width = width;
-	this.height = height;
-	this.collidesWith = function (other) {
-		return this.x < other.x + other.width &&
-		this.x + this.width > other.x &&
-		this.y < other.y + other.height &&
-		this.y + this.height > other.y;
-	};
-};
-
 // Will use this for nice effects and stuff.
 numParticles = 0
 function Particle(x, y, xvel, yvel, color, size) {
@@ -561,7 +304,7 @@ function Rain() {
 		})
 	}
 	this.render = function () {
-		ctx.fillStyle = 'rgb(26, 102, 255)' // Heheh, too lazy to use a color picker.
+		ctx.fillStyle = 'rgb(26, 102, 255)'
 		if (!this.stopped) {
 			ctx.fillRect(this.x, this.y, 5, 30)
 		}
